@@ -20,10 +20,10 @@ public class ExchangeController {
     }
 
     @GetMapping("/get/exchange/{table}/{code}")
-    @Operation(summary = "Get exchange from NBP API", description = "Enter number of days, the return will be Exchange object with mean")
+    @Operation(summary = "Get mean from NBP API", description = "Enter number of days, the return will be mean from Exchange object")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved and saved")
     @ApiResponse(responseCode = "404", description = "Invalid code / Exceeded valid number of days")
-    public ResponseEntity<Exchange> getExchange(@PathVariable String table, @PathVariable String code,
+    public ResponseEntity<Double> getExchange(@PathVariable String table, @PathVariable String code,
                                                 @RequestParam(required = false) String dateStart, @RequestParam(required = false) String dateStop) {
         if (dateStart == null || dateStop == null) {
             return ResponseEntity.ok(exchangeService.saveExchange(table, code));

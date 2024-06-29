@@ -22,16 +22,7 @@ public class ExchangeService {
         this.webClient = webClient;
     }
 
-    public Exchange getExchange(Long id) {
-        Optional<Exchange> exchange = exchangeRepository.findById(id);
-        if (exchange.isPresent()) {
-            return exchange.get();
-        } else {
-            throw new ExchangeNotFoundException();
-        }
-    }
-
-    public Exchange saveExchange(String table, String exchangeCode) {
+    public Double saveExchange(String table, String exchangeCode) {
         Exchange exchange = webClient.get()
                 .uri("http://api.nbp.pl/api/exchangerates/rates/" + table + "/" + exchangeCode + formatJson)
                 .retrieve()
@@ -43,10 +34,10 @@ public class ExchangeService {
         } else {
             throw new ExchangeNotFoundException();
         }
-        return exchange;
+        return exchange.getMean();
     }
 
-    public Exchange saveExchange(String table, String exchangeCode, String dateStart, String dateStop) {
+    public Double saveExchange(String table, String exchangeCode, String dateStart, String dateStop) {
         try {
             Exchange exchange = webClient.get()
                     .uri("http://api.nbp.pl/api/exchangerates/rates/" + table + "/" + exchangeCode + "/" +
@@ -57,7 +48,7 @@ public class ExchangeService {
             if (exchange != null) {
                 getExchangeMean(exchange);
                 exchangeRepository.save(exchange);
-                return exchange;
+                return exchange.getMean();
             } else {
                 throw new ExchangeNotFoundException();
             }
