@@ -20,8 +20,7 @@ public class ExchangeController {
     }
 
     @GetMapping("/get/exchange/{table}/{code}")
-    @Operation(summary = "Get exchange from NBP API", description = "Enter number of days, the return value will be mean" +
-            " and all of the information from json will be saved in database")
+    @Operation(summary = "Get exchange from NBP API", description = "Enter number of days, the return will be Exchange object with mean")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved and saved")
     @ApiResponse(responseCode = "404", description = "Invalid code")
     @ApiResponse(responseCode = "400", description = "Exteeded 250 days")

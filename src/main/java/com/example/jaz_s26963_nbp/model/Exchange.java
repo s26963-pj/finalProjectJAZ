@@ -1,5 +1,6 @@
 package com.example.jaz_s26963_nbp.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -12,15 +13,22 @@ import java.util.List;
 public class Exchange {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(name = "Exchange ID", example = "1", nullable = false)
     private Long id;
     @Column(name = "t")
+    @Schema(name = "Table from NBP API", example = "a", nullable = false)
     private String table;
+    @Schema(name = "Currency name from NBP API", example = "euro", nullable = false)
     private String currency;
+    @Schema(name = "Currency code from NBP API", example = "eur", nullable = false)
     private String code;
     @OneToMany
     @Cascade(CascadeType.ALL)
+    @Schema(name = "Rates from NBP API", nullable = false)
     private List<Rate> rates;
+    @Schema(name = "Mean from the request", example = "4.134", nullable = true)
     private Double mean;
+    @Schema(name = "Time and date of the query", example = "2024-06-29", nullable = true)
     private LocalDateTime queryDate = LocalDateTime.now();
 
     public Exchange() {
