@@ -1,10 +1,12 @@
 package com.example.jaz_s26963_nbp.service;
 
 import com.example.jaz_s26963_nbp.exceptions.ExchangeNotFoundException;
+import com.example.jaz_s26963_nbp.exceptions.notValidNumberOfDays;
 import com.example.jaz_s26963_nbp.model.Exchange;
 import com.example.jaz_s26963_nbp.model.Rate;
 import com.example.jaz_s26963_nbp.repository.ExchangeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.text.DecimalFormat;
