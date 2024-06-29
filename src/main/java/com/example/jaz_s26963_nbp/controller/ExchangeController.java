@@ -22,8 +22,7 @@ public class ExchangeController {
     @GetMapping("/get/exchange/{table}/{code}")
     @Operation(summary = "Get exchange from NBP API", description = "Enter number of days, the return will be Exchange object with mean")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved and saved")
-    @ApiResponse(responseCode = "404", description = "Invalid code")
-    @ApiResponse(responseCode = "400", description = "Exteeded 250 days")
+    @ApiResponse(responseCode = "404", description = "Invalid code / Exceeded valid number of days")
     public ResponseEntity<Exchange> getExchange(@PathVariable String table, @PathVariable String code,
                                                 @RequestParam(required = false) String dateStart, @RequestParam(required = false) String dateStop) {
         if (dateStart == null || dateStop == null) {

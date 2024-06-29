@@ -1,15 +1,14 @@
 package com.example.jaz_s26963_nbp.service;
 
 import com.example.jaz_s26963_nbp.exceptions.ExchangeNotFoundException;
-import com.example.jaz_s26963_nbp.exceptions.notValidNumberOfDays;
+import com.example.jaz_s26963_nbp.exceptions.ExchangeNotFoundInNbpException;
 import com.example.jaz_s26963_nbp.model.Exchange;
 import com.example.jaz_s26963_nbp.model.Rate;
 import com.example.jaz_s26963_nbp.repository.ExchangeRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.text.DecimalFormat;
 import java.util.Optional;
 
 @Service
@@ -48,19 +47,23 @@ public class ExchangeService {
     }
 
     public Exchange saveExchange(String table, String exchangeCode, String dateStart, String dateStop) {
-        Exchange exchange = webClient.get()
-                .uri("http://api.nbp.pl/api/exchangerates/rates/" + table + "/" + exchangeCode + "/" +
-                        dateStart + "/" + dateStop + formatJson)
-                .retrieve()
-                .bodyToMono(Exchange.class)
-                .block();
-        if (exchange != null) {
-            getExchangeMean(exchange);
-            exchangeRepository.save(exchange);
-        } else {
-            throw new ExchangeNotFoundException();
+        try {
+            Exchange exchange = webClient.get()
+                    .uri("http://api.nbp.pl/api/exchangerates/rates/" + table + "/" + exchangeCode + "/" +
+                            dateStart + "/" + dateStop + formatJson)
+                    .retrieve()
+                    .bodyToMono(Exchange.class)
+                    .block();
+            if (exchange != null) {
+                getExchangeMean(exchange);
+                exchangeRepository.save(exchange);
+                return exchange;
+            } else {
+                throw new ExchangeNotFoundException();
+            }
+        } catch (WebClientResponseException ex) {
+            throw new ExchangeNotFoundInNbpException();
         }
-        return exchange;
     }
 
     private Double getExchangeMean(Exchange exchange) {
